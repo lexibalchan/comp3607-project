@@ -8,6 +8,20 @@
     <groupId>tt.uwi</groupId>
     <artifactId>bluej-telemetry-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
+    
+    <name>COMP3607 Group 17 BlueJ Telemetry Plugin</name>
+
+    <description>
+        BlueJ extension for collecting development telemetry and exporting
+        session data as JSON and two-page PDF reports.
+    </description>
+
+    <url>https://github.com/lexibalchan/comp3607-project</url>
+
+    <scm>
+        <connection>scm:git:https://github.com/lexibalchan/comp3607-project.git</connection>
+        <url>https://github.com/lexibalchan/comp3607-project</url>
+    </scm>    
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
