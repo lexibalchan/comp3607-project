@@ -111,12 +111,22 @@ C:\Users\<your-Windows-username>\bluej-telemetry-output
 ```
 
 Each export produces a JSON file and a PDF file sharing the same
-unique filename prefix. Report generation runs on a background worker,
-so files may take a moment to appear.
+filename prefix: a project label, snapshot timestamp and unique ID.
 
-The JSON contains event details and session metadata. The PDF contains
-compilation outcomes, activity estimates, error frequencies and a
-class-creation timeline.
+For a session containing one project, the label is the project folder's
+name, with unsupported filename characters replaced by underscores.
+Sessions containing several projects use `multiple-projects`; sessions
+without a registered project use `no-project`.
+
+Report generation runs on a background worker, so files may take
+a moment to appear.
+
+The JSON contains event details, session metadata and registered project
+directories. A session can contain events from several projects opened
+in the same BlueJ instance.
+
+The PDF contains compilation outcomes, activity estimates, error
+frequencies and a class-creation timeline.
 
 ## Measurement rules and limitations
 
