@@ -78,4 +78,33 @@ class MethodInventoryTrackerTest {
         assertEquals(EventType.METHOD_REMOVED, events.get(0).getType());
         assertTrue(events.get(0).getDescription().contains("second()"));
     }
+
+    @Test
+    void clearsDeletedClassWithoutErasingRemainingClassHistory() {
+        List<TelemetryEvent> events = new ArrayList<>();
+        TelemetrySubject subject = new TelemetrySubject();
+        subject.addObserver(events::add);
+
+        MethodInventoryTracker tracker =
+                new MethodInventoryTracker(subject);
+
+        tracker.observe("project-one", "Student", Set.of("oldMethod()"));
+        tracker.observe("project-one", "Course", Set.of("enrol()"));
+
+        // Student has been deleted; Course remains.
+        tracker.retainClasses("project-one", Set.of("Course"));
+
+        // A new Student class should establish a fresh baseline.
+        tracker.observe("project-one", "Student", Set.of("newMethod()"));
+
+        assertTrue(events.isEmpty());
+
+        // Course should still have its previous method history.
+        tracker.observe("project-one", "Course", Set.of());
+
+        assertEquals(1, events.size());
+        assertEquals(EventType.METHOD_REMOVED, events.get(0).getType());
+        assertEquals("Course", events.get(0).getClassName());
+        assertTrue(events.get(0).getDescription().contains("enrol()"));
+    }
 }

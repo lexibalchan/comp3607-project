@@ -84,4 +84,54 @@ public class BackgroundExporterTest {
 
         assertNull(session.getEndTime());
     }
+
+    @Test
+    void labelsExportWithNoRegisteredProject() throws Exception {
+        assertExportLabel("no-project");
+    }
+
+    @Test
+    void labelsExportContainingMultipleProjects() throws Exception {
+        assertExportLabel(
+                "multiple-projects",
+                "project-one",
+                "project-two"
+        );
+    }
+
+    private void assertExportLabel(
+            String expectedLabel,
+            String... projectDirectories) throws Exception {
+
+        LocalDateTime start =
+                LocalDateTime.of(2026, 11, 15, 10, 0);
+
+        TelemetrySession session = new TelemetrySession("TEST", start);
+
+        for (String directory : projectDirectories) {
+            session.registerProject(directory);
+        }
+
+        try (BackgroundExporter exporter =
+                    new BackgroundExporter(temporaryDirectory)) {
+
+            exporter.exportSnapshot(
+                    session.snapshot(start.plusSeconds(10))
+            ).get(10, TimeUnit.SECONDS);
+        }
+
+        try (var files = Files.list(temporaryDirectory)) {
+            var exported = files.toList();
+
+            assertEquals(2, exported.size());
+
+            for (Path file : exported) {
+                assertTrue(
+                        file.getFileName().toString().startsWith(
+                                expectedLabel + "-20261115-100010-"
+                        )
+                );
+            }
+        }
+    }
 }
