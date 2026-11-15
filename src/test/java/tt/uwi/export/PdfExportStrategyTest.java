@@ -20,7 +20,7 @@ public class PdfExportStrategyTest {
     Path temporaryDirectory;
 
     @Test
-    void exportsTwoPagesWithClassCreationTimeline() throws Exception {
+    void exportsTwoPagesWithClassAndMethodTimeline() throws Exception {
         LocalDateTime start =
                 LocalDateTime.of(2026, 11, 13, 10, 0);
 
@@ -34,6 +34,22 @@ public class PdfExportStrategyTest {
                 "Course"
         ));
 
+		session.addEvent(new TelemetryEvent(
+				EventType.METHOD_ADDED,
+				start.plusSeconds(20),
+				"Detected method addition: probe(): void"
+						+ " | Package directory: test-project",
+				"Course"
+		));
+
+		session.addEvent(new TelemetryEvent(
+				EventType.METHOD_REMOVED,
+				start.plusSeconds(30),
+				"Detected method removal: probe(): void"
+						+ " | Package directory: test-project",
+				"Course"
+		));
+	
         session.setEndTime(start.plusSeconds(60));
 
         Path outputFile =
@@ -52,10 +68,13 @@ public class PdfExportStrategyTest {
 
             String timelineText = reader.getText(document);
 
-            assertTrue(timelineText.contains("Class creation timeline"));
+			assertTrue(timelineText.contains("Class and method progression timeline"));
+			assertTrue(timelineText.contains("Course - Method added: probe(): void"));
+			assertTrue(timelineText.contains("Course - Method removed: probe(): void"));
+			assertFalse(timelineText.contains("Package directory:"));
             assertTrue(timelineText.contains("Course"));
             assertTrue(timelineText.contains("2026-11-13 10:00:10"));
-            assertTrue(timelineText.contains("Showing 1 of 1"));
+            assertTrue(timelineText.contains("Showing 3 of 3"));
         }
     }
 

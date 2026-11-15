@@ -37,6 +37,7 @@ public class BlueJPackageListenerTest {
         when(bluejPackage.getProject()).thenReturn(project);
         when(bluejPackage.getName()).thenReturn("");
         when(project.getDir()).thenReturn(projectDirectory);
+        when(bluejPackage.getDir()).thenReturn(projectDirectory);
 
         BlueJClassScanner scanner = mock(BlueJClassScanner.class);
 

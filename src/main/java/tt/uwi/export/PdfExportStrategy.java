@@ -138,6 +138,43 @@ public class PdfExportStrategy implements ExportStrategy {
                 width);
     }
 
+	private boolean isTimelineEvent(TelemetryEvent event) {
+		return switch (event.getType()) {
+			case CLASS_CREATED, CLASS_DELETED, CLASS_RENAMED,
+				METHOD_ADDED, METHOD_REMOVED -> true;
+			default -> false;
+		};
+	}
+
+	private String timelineLabel(TelemetryEvent event) {
+		String className = safe(event.getClassName());
+
+		return switch (event.getType()) {
+			case CLASS_CREATED -> "Class added: " + className;
+			case CLASS_DELETED -> "Class deleted: " + className;
+			case CLASS_RENAMED -> safe(event.getDescription());
+
+			case METHOD_ADDED, METHOD_REMOVED -> {
+				String description = safe(event.getDescription());
+
+				int directoryStart =
+						description.indexOf(" | Package directory:");
+
+				if (directoryStart >= 0) {
+					description = description.substring(0, directoryStart);
+				}
+
+				description = description
+						.replace("Detected method addition: ", "Method added: ")
+						.replace("Detected method removal: ", "Method removed: ");
+
+				yield className + " - " + description;
+			}
+
+			default -> className;
+		};
+	}
+
     @Override
     public void export(TelemetrySession session, Path outputFile)
             throws IOException {
@@ -271,8 +308,8 @@ public class PdfExportStrategy implements ExportStrategy {
         PDPage page = new PDPage();
         document.addPage(page);
 
-        var creations = session.getEvents().stream()
-                .filter(event -> event.getType() == EventType.CLASS_CREATED)
+        var changes = session.getEvents().stream()
+                .filter(this::isTimelineEvent)
                 .sorted(Comparator.comparing(TelemetryEvent::getTimestamp))
                 .toList();
 
@@ -283,38 +320,38 @@ public class PdfExportStrategy implements ExportStrategy {
                     new PDPageContentStream(document, page)) {
 
             writeText(content, 50, 740, 16,
-                    "Class creation timeline", 512);
+                    "Class and method progression timeline", 512);
 
             writeText(content, 50, 712, 10,
-                    "Times show detection at inventory scans, not exact creation.",
+                    "Times show recorded notifications or detected inventory changes.",
                     512);
 
             writeText(content, 50, 694, 10,
-                    "Classes present at the initial scan are not listed.", 512);
+                    "Initial class and method inventories establish a baseline.", 512);
 
             writeText(content, 60, 658, 10, "Detected at (local time)", 145);
-            writeText(content, 220, 658, 10, "Class name", 332);
+            writeText(content, 220, 658, 10, "Change detected", 332);
 
             content.moveTo(50, 648);
             content.lineTo(562, 648);
             content.stroke();
 
-            int displayed = Math.min(creations.size(), 18);
+            int displayed = Math.min(changes.size(), 18);
             float y = 628;
 
-            if (creations.isEmpty()) {
+            if (changes.isEmpty()) {
                 writeText(content, 60, y, 10,
-                        "No class creations detected in this session.", 492);
+                        "No class or method changes detected in this session.", 492);
             }
 
             for (int index = 0; index < displayed; index++) {
-                TelemetryEvent event = creations.get(index);
+                TelemetryEvent event = changes.get(index);
 
                 writeText(content, 60, y, 9,
                         format.format(event.getTimestamp()), 145);
 
-                writeText(content, 220, y, 10,
-                        event.getClassName(), 332);
+                writeText(content, 220, y, 9,
+                        timelineLabel(event), 332);
 
                 content.moveTo(50, y - 8);
                 content.lineTo(562, y - 8);
@@ -324,8 +361,8 @@ public class PdfExportStrategy implements ExportStrategy {
             }
 
             writeText(content, 50, 150, 10,
-                    "Showing " + displayed + " of " + creations.size()
-                            + " detected creations.", 512);
+                    "Showing " + displayed + " of " + changes.size()
+                            + " detected changes.", 512);
 
             writeText(content, 50, 132, 10,
                     "Long labels are shortened; full event details remain in JSON.",

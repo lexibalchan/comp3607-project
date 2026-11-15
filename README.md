@@ -13,6 +13,8 @@ events and exports session summaries as JSON and PDF reports.
 - Records editor document-change events.
 - Estimates active and idle time using 30-second edit windows.
 - Exports reports manually and during graceful shutdown.
+- Detects method-signature additions and removals by comparing compiled
+  class inventories.
 
 ## Technology
 
@@ -126,7 +128,7 @@ directories. A session can contain events from several projects opened
 in the same BlueJ instance.
 
 The PDF contains compilation outcomes, activity estimates, error
-frequencies and a class-creation timeline.
+frequencies and a class and method creation timeline.
 
 ## Measurement rules and limitations
 
@@ -157,8 +159,11 @@ frequencies and a class-creation timeline.
 - Graceful shutdown waits up to 30 seconds for queued exports.
   Export completion is not guaranteed if that wait expires.
 - PDF reports are limited to two pages, showing up to five error
-  messages and eighteen detected class creations. Full recorded
+  messages and eighteen recorded class and method changes. Full recorded
   event details remain in the JSON.
+- Method tracking compares compiled signatures, not method bodies.
+  The first successful inspection establishes a baseline. Changes
+  made before that baseline are not reported as additions or removals.
 
 -----------------------------------------------------------------------------------------------------------------------------------
 

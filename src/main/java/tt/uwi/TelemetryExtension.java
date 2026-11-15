@@ -19,6 +19,8 @@ import tt.uwi.analytics.SessionAnalytics;
 import tt.uwi.collection.BlueJClassListener;
 import tt.uwi.collection.BlueJExecutionListener;
 import tt.uwi.collection.EditorListenerRegistry;
+import tt.uwi.collection.MethodInventoryTracker;
+import tt.uwi.collection.BlueJMethodScanner;
 
 import java.nio.file.Path;
 import tt.uwi.export.BackgroundExporter;
@@ -64,6 +66,9 @@ public class TelemetryExtension extends Extension {
         subject.addObserver(collector);
         ClassInventoryTracker tracker = new ClassInventoryTracker(subject);
 
+        MethodInventoryTracker methodTracker = new MethodInventoryTracker(subject);
+        BlueJMethodScanner methodScanner = new BlueJMethodScanner(bluej, methodTracker);
+
         editorRegistry = new EditorListenerRegistry(subject);
 
         BlueJClassScanner scanner = new BlueJClassScanner(bluej, tracker, editorRegistry);
@@ -79,16 +84,24 @@ public class TelemetryExtension extends Extension {
         }
 
         scanner.scanOpenProjects();
+        methodScanner.scanOpenProjects();
 
         bluej.addCompileListener(
             new BlueJCompileListener(
                 subject,
-                scanner::scanOpenProjects
+                scanner::scanOpenProjects,
+                methodScanner::scanOpenProjects
             )
         );
 
         bluej.addPackageListener(
-            new BlueJPackageListener(subject, scanner, session::registerProject)
+            new BlueJPackageListener(
+                subject, 
+                scanner, 
+                session::registerProject,
+                methodScanner::scanPackage,
+                methodTracker::forgetPackage
+            )
         );
 
         bluej.addClassListener(

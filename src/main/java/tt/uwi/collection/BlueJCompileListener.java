@@ -16,14 +16,27 @@ public class BlueJCompileListener implements CompileListener {
 
     private final TelemetrySubject subject;
     private final Runnable scanClasses;
+    private final Runnable  scanMethods;
 
     public BlueJCompileListener(TelemetrySubject subject) {
         this(subject, () -> {});
     }
 
-    public BlueJCompileListener(TelemetrySubject subject, Runnable scanClasses) {
+    public BlueJCompileListener(
+            TelemetrySubject subject,
+            Runnable scanClasses) {
+
+        this(subject, scanClasses, () -> {});
+    }
+
+    public BlueJCompileListener(
+            TelemetrySubject subject,
+            Runnable scanClasses,
+            Runnable scanMethods) {
+
         this.subject = subject;
         this.scanClasses = scanClasses;
+        this.scanMethods = scanMethods;
     }
 
     private List<String> sourceFilesOf(CompileEvent event) {
@@ -58,6 +71,8 @@ public class BlueJCompileListener implements CompileListener {
                 null,
                 sourceFilesOf(event)
         ));
+
+        scanMethods.run();
     }
 
     @Override 

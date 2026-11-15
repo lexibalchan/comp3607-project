@@ -18,23 +18,42 @@ public class BlueJPackageListener implements PackageListener {
     private final TelemetrySubject subject;
     private final BlueJClassScanner scanner;
     private final Consumer<String> registerProject;
+    private final Consumer<BPackage> scanMethods;
+    private final Consumer<String> forgetMethods;
 
     public BlueJPackageListener(TelemetrySubject subject, BlueJClassScanner scanner) {
 
         this(subject, scanner, directory -> {});
     }
 
-    public BlueJPackageListener(TelemetrySubject subject, BlueJClassScanner scanner, Consumer<String> registerProject) {
+    public BlueJPackageListener(
+        TelemetrySubject subject,
+        BlueJClassScanner scanner,
+        Consumer<String> registerProject) {
+
+        this(subject, scanner, registerProject,
+                bluejPackage -> {}, directory -> {});
+    }
+
+    public BlueJPackageListener(
+            TelemetrySubject subject,
+            BlueJClassScanner scanner,
+            Consumer<String> registerProject,
+            Consumer<BPackage> scanMethods,
+            Consumer<String> forgetMethods) {
 
         this.subject = subject;
         this.scanner = scanner;
         this.registerProject = registerProject;
+        this.scanMethods = scanMethods;
+        this.forgetMethods = forgetMethods;
     }
 
     @Override
     public void packageOpened(PackageEvent event) {
         recordPackageEvent(event, EventType.PACKAGE_OPENED);
         scanner.scanPackage(event.getPackage());
+        scanMethods.accept(event.getPackage());
     }
 
     @Override
@@ -57,7 +76,11 @@ public class BlueJPackageListener implements PackageListener {
             String projectPath = bluejPackage.getProject().getDir().getAbsolutePath();
 
             registerProject.accept(projectPath);
-            
+
+            if (type == EventType.PACKAGE_CLOSING) {
+                forgetMethods.accept(bluejPackage.getDir().getAbsolutePath());
+            }
+
             if (packageName.isEmpty()) {
                 packageName = "(default package)";
             }
