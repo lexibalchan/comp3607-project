@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.time.format.DateTimeFormatter;
 
 import tt.uwi.telemetry.model.TelemetrySession;
 import tt.uwi.commands.CommandInvoker;
@@ -36,7 +37,11 @@ public class BackgroundExporter implements AutoCloseable {
             try {
                 Files.createDirectories(outputDirectory);
 
-                String baseName = "session-" + UUID.randomUUID();
+                String timestamp = snapshot.getEndTime().format(
+                    DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
+                );
+
+                String baseName = projectLabel(snapshot) + "-" + timestamp + "-" + UUID.randomUUID();
 
                 Path jsonFile =
                         outputDirectory.resolve(baseName + ".json");
@@ -48,6 +53,7 @@ public class BackgroundExporter implements AutoCloseable {
 
                 invoker.run(new JsonExportCommand(service, snapshot, jsonFile));
                 System.out.println("Telemetry JSON saved to: " + jsonFile);
+
 
                 invoker.run(new PdfExportCommand(service, snapshot, pdfFile));
                 System.out.println("Telemetry PDF saved to: " + pdfFile);
@@ -61,6 +67,26 @@ public class BackgroundExporter implements AutoCloseable {
                 );
             }
         });
+    }
+
+    private String projectLabel(TelemetrySession snapshot) {
+        var directories = snapshot.getProjectDirectories();
+
+        if (directories.isEmpty()) {
+            return "no-project";
+        }
+
+        if (directories.size() > 1) {
+            return "multiple-projects";
+        }
+
+        Path folderName = Path.of(directories.get(0)).getFileName();
+
+        String name = folderName == null ? "project" : folderName.toString();
+
+        String safeName = name.replaceAll("[^a-zA-Z0-9._-]", "_");
+
+        return safeName.substring(0, Math.min(safeName.length(), 60));
     }
 
     @Override

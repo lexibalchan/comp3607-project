@@ -11,14 +11,24 @@ import bluej.extensions2.event.PackageListener;
 import tt.uwi.telemetry.model.EventType;
 import tt.uwi.telemetry.model.TelemetryEvent;
 
+import java.util.function.Consumer;
+
 public class BlueJPackageListener implements PackageListener {
 
     private final TelemetrySubject subject;
     private final BlueJClassScanner scanner;
+    private final Consumer<String> registerProject;
 
     public BlueJPackageListener(TelemetrySubject subject, BlueJClassScanner scanner) {
+
+        this(subject, scanner, directory -> {});
+    }
+
+    public BlueJPackageListener(TelemetrySubject subject, BlueJClassScanner scanner, Consumer<String> registerProject) {
+
         this.subject = subject;
         this.scanner = scanner;
+        this.registerProject = registerProject;
     }
 
     @Override
@@ -44,9 +54,10 @@ public class BlueJPackageListener implements PackageListener {
             BPackage bluejPackage = event.getPackage();
 
             String packageName = bluejPackage.getName();
-            String projectPath =
-                    bluejPackage.getProject().getDir().getAbsolutePath();
+            String projectPath = bluejPackage.getProject().getDir().getAbsolutePath();
 
+            registerProject.accept(projectPath);
+            
             if (packageName.isEmpty()) {
                 packageName = "(default package)";
             }

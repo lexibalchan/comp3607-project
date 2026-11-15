@@ -2,6 +2,7 @@ package tt.uwi;
 
 import bluej.extensions2.BlueJ;
 import bluej.extensions2.Extension;
+import bluej.extensions2.ProjectNotOpenException;
 
 import java.time.LocalDateTime;
 
@@ -67,6 +68,16 @@ public class TelemetryExtension extends Extension {
 
         BlueJClassScanner scanner = new BlueJClassScanner(bluej, tracker, editorRegistry);
 
+        for (var project : bluej.getOpenProjects()) {
+            try {
+                session.registerProject(project.getDir().getAbsolutePath());
+            } catch (ProjectNotOpenException exception) {
+                System.err.println("Could not register an open project: "
+                                        + exception.getMessage()
+                );
+            }
+        }
+
         scanner.scanOpenProjects();
 
         bluej.addCompileListener(
@@ -77,7 +88,7 @@ public class TelemetryExtension extends Extension {
         );
 
         bluej.addPackageListener(
-            new BlueJPackageListener(subject, scanner)
+            new BlueJPackageListener(subject, scanner, session::registerProject)
         );
 
         bluej.addClassListener(

@@ -27,6 +27,8 @@ public class BackgroundExporterTest {
         TelemetrySession session =
                 new TelemetrySession("TEST-STUDENT", start);
 
+        session.registerProject(temporaryDirectory.resolve("TelemetryTest").toString());
+
         TelemetrySession snapshot =
                 session.snapshot(start.plusSeconds(10));
 
@@ -55,9 +57,21 @@ public class BackgroundExporterTest {
                     .orElseThrow();
         }
 
+        String jsonName = jsonFile.getFileName().toString();
+        String pdfName = pdfFile.getFileName().toString();
+
+        assertTrue(jsonName.startsWith("TelemetryTest-20261113-100010-"));
+
+        assertEquals(jsonName.substring(0, jsonName.length() - "json".length()), 
+                    pdfName.substring(0, pdfName.length() - "pdf".length()));
+
         var json = new ObjectMapper().readTree(jsonFile.toFile());
 
         assertEquals("TEST-STUDENT", json.path("studentId").asText());
+
+        assertEquals(session.getProjectDirectories().get(0), 
+                    json.path("projectDirectories").get(0).asText());
+
         assertEquals(
                 10.0,
                 json.path("sessionDurationSeconds").asDouble(),

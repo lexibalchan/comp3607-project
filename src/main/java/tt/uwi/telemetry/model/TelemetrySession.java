@@ -11,6 +11,7 @@ public class TelemetrySession {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private List<TelemetryEvent> events;
+    private final List<String> projectDirectories = new ArrayList<>();
 
     public TelemetrySession(String studentId, LocalDateTime startTime) {
         this.studentId = studentId;
@@ -50,6 +51,10 @@ public class TelemetrySession {
 
         TelemetrySession copy = new TelemetrySession(studentId, startTime);
 
+        for (String directory : projectDirectories) {
+            copy.registerProject(directory);
+        }
+
         for (TelemetryEvent event : events) {
             copy.addEvent(event);
         }
@@ -57,6 +62,20 @@ public class TelemetrySession {
         copy.setEndTime(captureAt);
 
         return copy;
+    }
+
+    public synchronized void registerProject(String directory) {
+        if (directory == null || directory.isBlank()) {
+            throw new IllegalArgumentException("Project directory must not be blank.");
+        }
+
+        if (!projectDirectories.contains(directory)) {
+            projectDirectories.add(directory);
+        }
+    }
+
+    public synchronized List<String> getProjectDirectories() {
+        return List.copyOf(projectDirectories);
     }
 
     public Double getSessionDurationSeconds() {
