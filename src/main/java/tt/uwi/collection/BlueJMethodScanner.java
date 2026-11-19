@@ -11,11 +11,25 @@ import bluej.extensions2.BlueJ;
 import bluej.extensions2.PackageNotFoundException;
 import bluej.extensions2.ProjectNotOpenException;
 
+/**
+ * Scans BlueJ projects, packages, and compiled classes to track declared
+ * method signatures in the method inventory.
+ */
+
 public class BlueJMethodScanner {
 
+    /** The BlueJ environment used to access open projects. */
     private final BlueJ bluej;
+
+    /** Tracks method signatures and publishes detected additions or removals. */
     private final MethodInventoryTracker tracker;
 
+    /**
+     * Constructs a method scanner.
+     *
+     * @param bluej the BlueJ environment
+     * @param tracker the method inventory tracker
+     */
     public BlueJMethodScanner(
             BlueJ bluej,
             MethodInventoryTracker tracker) {
@@ -24,6 +38,10 @@ public class BlueJMethodScanner {
         this.tracker = tracker;
     }
 
+    /**
+     * Scans every package in each currently open BlueJ project.
+     * A project that closes during scanning is reported and skipped.
+     */
     public void scanOpenProjects() {
         for (var project : bluej.getOpenProjects()) {
             try {
@@ -39,6 +57,13 @@ public class BlueJMethodScanner {
         }
     }
 
+    /**
+     * Scans all classes in a package and removes tracked method inventory for
+     * classes that are no longer in the package.
+     * Package access failures are written to standard error.
+     *
+     * @param bluejPackage the package to scan
+     */
     public void scanPackage(BPackage bluejPackage) {
         try {
             String directory =
@@ -66,6 +91,14 @@ public class BlueJMethodScanner {
         }
     }
 
+    /**
+     * Scans declared methods on one compiled class.
+     * Uncompiled classes are skipped. Method signatures include parameter type
+     * names and the return type name.
+     *
+     * @param directory the absolute package-directory key
+     * @param bluejClass the class whose declared methods are inspected
+     */
     private void scanClass(String directory, BClass bluejClass) {
         try {
             if (!bluejClass.isCompiled()) {
