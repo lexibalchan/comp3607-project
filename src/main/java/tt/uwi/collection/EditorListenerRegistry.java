@@ -7,17 +7,36 @@ import java.util.Map;
 import bluej.extensions2.BClass;
 import bluej.extensions2.editor.JavaEditor;
 
+/**
+ * Tracks document-listener registrations for BlueJ classes, grouped by
+ * package key, to prevent duplicate attachment and support package cleanup.
+ */
 public class EditorListenerRegistry {
 
+    /** Publishes telemetry from registered editor listeners. */
     private final TelemetrySubject subject;
 
+    /** Package-keyed registrations using identity for BlueJ class instances. */
     private final Map<String, Map<BClass, Registration>> packages =
             new HashMap<>();
 
+    /**
+     * Constructs an editor listener registry.
+     *
+     * @param subject the subject used by created editor listeners
+     */
     public EditorListenerRegistry(TelemetrySubject subject) {
         this.subject = subject;
     }
 
+    /**
+     * Attaches one document listener to a class's Java editor.
+     * A null editor or an already registered class is ignored.
+     *
+     * @param packageKey the key identifying the package
+     * @param bluejClass the BlueJ class represented by the listener
+     * @param editor the editor document listener container
+     */
     public void attach(
             String packageKey, BClass bluejClass, JavaEditor editor) {
 
@@ -46,6 +65,12 @@ public class EditorListenerRegistry {
         );
     }
 
+    /**
+     * Removes and unregisters all editor listeners associated with a package.
+     * Detaching an unknown or already detached package has no effect.
+     *
+     * @param packageKey the key identifying the package to detach
+     */
     public void detachPackage(String packageKey) {
         Map<BClass, Registration> registrations =
                 packages.remove(packageKey);
@@ -61,6 +86,9 @@ public class EditorListenerRegistry {
         }
     }
 
+    /**
+     * Removes and unregisters every editor listener held by this registry.
+     */
     public void detachAll() {
         for (String packageKey :
                 packages.keySet().toArray(new String[0])) {
@@ -68,6 +96,12 @@ public class EditorListenerRegistry {
         }
     }
 
+    /**
+     * Stores the editor and listener pair for a registered BlueJ class.
+     *
+     * @param editor the Java editor from which the listener can be removed
+     * @param listener the attached document listener
+     */
     private record Registration(
             JavaEditor editor,
             BlueJEditorListener listener) {
