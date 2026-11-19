@@ -12,8 +12,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Calculates aggregate and event-based analytics for telemetry sessions.
+ */
 public class SessionAnalytics {
-
+    
+    /**
+     * Creates a summary of the session's overall event and activity counts.
+     * Compilation attempts include successful and failed compilation events.
+     *
+     * @param session the telemetry session to analyse
+     * @return an analytics summary for the session
+     */
     public AnalyticsSummary analyse(TelemetrySession session) {
 
         int attempts = 0;
@@ -50,6 +60,14 @@ public class SessionAnalytics {
         );
     }
 
+    /**
+     * Counts compile errors grouped by their compiler-message description.
+     * Events with a null or blank description are grouped under
+     * {@code "Unkown compiler error"}.
+     *
+     * @param session the telemetry session containing compile-error events
+     * @return a map of compiler messages to their occurrence counts
+     */
     public Map<String, Integer> countErrorsByMessage(TelemetrySession session) {
         Map<String, Integer> counts = new TreeMap<>();
 
@@ -68,6 +86,13 @@ public class SessionAnalytics {
         return counts;
     }
 
+    /**
+     * Calculates the time between consecutive compilation-start events.
+     * The interval before the first compilation-start event is not included.
+     *
+     * @param session the telemetry session containing compile-start events
+     * @return the compile intervals in seconds, in event order
+     */
     public List<Double> calculateCompileIntervalsSeconds(TelemetrySession session) {
 
         List<Double> intervals = new ArrayList<>();
