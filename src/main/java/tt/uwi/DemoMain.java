@@ -17,8 +17,20 @@ import tt.uwi.telemetry.model.EventType;
 import tt.uwi.telemetry.model.TelemetryEvent;
 import tt.uwi.telemetry.model.TelemetrySession;
 
+/**
+ * Demonstrates telemetry collection, summary calculation, and JSON/PDF export
+ * with sample events outside a running BlueJ extension.
+ */
 public class DemoMain {
 
+    /**
+     * Runs the telemetry demonstration from a live in-memory session.
+     * Publishes sample events through the observer subject, prints session
+     * statistics, creates the output directory, and exports JSON and PDF reports.
+     *
+     * @param args command-line arguments; this demo does not require any
+     * @throws Exception if output directories or export files cannot be created
+     */
     public static void main(String[] args) throws Exception {
 
         TelemetrySession session =
