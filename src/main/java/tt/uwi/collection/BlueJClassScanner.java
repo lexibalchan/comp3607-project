@@ -10,13 +10,29 @@ import bluej.extensions2.BlueJ;
 import bluej.extensions2.PackageNotFoundException;
 import bluej.extensions2.ProjectNotOpenException;
 
-
+/**
+ * Scans BlueJ projects and packages to synchronize class inventory and editor
+ * listener registrations.
+ */
 public class BlueJClassScanner {
 
+    /** The BlueJ environment used to access open projects. */
     private final BlueJ bluej;
+
+    /** Tracks class names and publishes detected inventory changes. */
     private final ClassInventoryTracker tracker;
+
+    /** Manages editor listeners attached to classes in scanned packages. */
     private final EditorListenerRegistry editorRegistry;
 
+    /**
+     * Constructs a class scanner with its BlueJ environment and supporting
+     * inventory and listener components.
+     *
+     * @param bluej the BlueJ environment
+     * @param tracker the class inventory tracker
+     * @param editorRegistry the registry for editor listeners
+     */
     public BlueJClassScanner(
             BlueJ bluej, ClassInventoryTracker tracker, EditorListenerRegistry editorRegistry) {
         this.bluej = bluej;
@@ -24,6 +40,13 @@ public class BlueJClassScanner {
         this.editorRegistry = editorRegistry;
     }
 
+    /**
+     * Scans a package and updates its class inventory and editor listeners.
+     * Package access failures are written to standard error and do not alter
+     * the existing package inventory.
+     *
+     * @param bluejPackage the package to scan
+     */
     public void scanPackage(BPackage bluejPackage) {
         try {
             String packageKey =
@@ -47,6 +70,10 @@ public class BlueJClassScanner {
         }
     }
 
+    /**
+     * Scans every package in each currently open BlueJ project.
+     * A project that closes during scanning is reported and skipped.
+     */
     public void scanOpenProjects() {
         for (BProject project : bluej.getOpenProjects()) {
             try {
@@ -62,6 +89,12 @@ public class BlueJClassScanner {
         }
     }
 
+    /**
+     * Removes a package's editor listeners and class inventory state.
+     * Package access failures are written to standard error.
+     *
+     * @param bluejPackage the package to forget
+     */
     public void forgetPackage(BPackage bluejPackage) {
         try {
             String packageKey =
