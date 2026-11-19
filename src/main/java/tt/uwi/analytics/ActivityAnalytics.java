@@ -6,7 +6,31 @@ import tt.uwi.telemetry.model.EventType;
 import tt.uwi.telemetry.model.TelemetryEvent;
 import tt.uwi.telemetry.model.TelemetrySession;
 
+/**
+ * Provides estimates of active and idle time within a telemetry session.
+ * Activity is estimated from editor events, with each event representing
+ * activity for a configurable period following the event.
+ */
+
 public class ActivityAnalytics {
+
+    /**
+     * Analyses editor activity in a telemetry session.
+     *
+     * <p>Each editor event contributes activity up to
+     * {@code idleThresholdSeconds} after that event. Overlapping activity
+     * periods are counted only once. Editor events outside the session's
+     * start and end times are ignored.</p>
+     *
+     * @param session the telemetry session to analyse
+     * @param idleThresholdSeconds the number of seconds following an editor
+     *                             event that are considered active
+     * @return a summary containing the editor-event count and estimated active
+     *         and idle durations
+     * @throws IllegalArgumentException if the idle threshold is not positive
+     *                                  or the session ends before it starts
+     * @throws IllegalStateException if the session does not have an end time
+     */
 
     public ActivitySummary analyse(
             TelemetrySession session, int idleThresholdSeconds) {
