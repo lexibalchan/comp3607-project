@@ -9,16 +9,36 @@ import java.time.LocalDateTime;
 import tt.uwi.telemetry.model.EventType;
 import tt.uwi.telemetry.model.TelemetryEvent;
 
+/**
+ * Receives BlueJ class events and updates the class inventory or publishes
+ * telemetry for class state changes.
+ */
+
 public class BlueJClassListener implements ClassListener {
 
+    /** Tracks class names and publishes inventory-change telemetry. */
     private final ClassInventoryTracker tracker;
+
+    /** Publishes telemetry events for class state changes. */
     private final TelemetrySubject subject;
 
+    /**
+     * Constructs a listener with the tracker and telemetry subject to use.
+     *
+     * @param tracker the class inventory tracker
+     * @param subject the subject that publishes telemetry events
+     */
     public BlueJClassListener(ClassInventoryTracker tracker, TelemetrySubject subject) {
         this.tracker = tracker;
         this.subject = subject;
     }
 
+    /**
+     * Handles a BlueJ class rename notification.
+     * The package directory is used as the inventory key for the class.
+     *
+     * @param event the class event containing the old and new class names
+     */
     @Override
     public void classNameChanged(ClassEvent event) {
         try {
@@ -39,6 +59,12 @@ public class BlueJClassListener implements ClassListener {
         }
     }
 
+    /**
+     * Handles a BlueJ class state-change notification.
+     * Publishes telemetry describing the class's compiled and error states.
+     *
+     * @param event the class event containing the current class state
+     */
     @Override
     public void classStateChanged(ClassEvent event) {
         subject.publish(new TelemetryEvent(
@@ -50,6 +76,12 @@ public class BlueJClassListener implements ClassListener {
         ));
     }
 
+    /**
+     * Handles a BlueJ class-removal notification.
+     * Class removals are currently not tracked by this listener.
+     *
+     * @param event the class event for the removed class
+     */
     @Override
     public void classRemoved(ClassEvent event) {
     }
