@@ -15,17 +15,36 @@ import tt.uwi.commands.CommandInvoker;
 import tt.uwi.commands.JsonExportCommand;
 import tt.uwi.commands.PdfExportCommand;
 
+/**
+ * Executes telemetry snapshot exports asynchronously and writes matching JSON
+ * and PDF files to a configured output directory.
+ */
 public class BackgroundExporter implements AutoCloseable {
 
+    /** Directory where exported JSON and PDF files are written. */
     private final Path outputDirectory;
 
+    /** Single-thread executor that processes export requests sequentially. */
     private final ExecutorService worker =
             Executors.newSingleThreadExecutor();
 
+    /**
+     * Constructs a background exporter.
+     *
+     * @param outputDirectory directory where exported files will be written
+     */
     public BackgroundExporter(Path outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 
+    /**
+     * Schedules asynchronous JSON and PDF exports for a completed snapshot.
+     * Both files use a shared timestamped, UUID-suffixed base name.
+     *
+     * @param snapshot the completed telemetry-session snapshot to export
+     * @return a future that completes after both export files are written
+     * @throws IllegalArgumentException if the snapshot has no end time
+     */
     public Future<?> exportSnapshot(TelemetrySession snapshot) {
         if (snapshot.getEndTime() == null) {
             throw new IllegalArgumentException(
@@ -69,6 +88,14 @@ public class BackgroundExporter implements AutoCloseable {
         });
     }
 
+    /**
+     * Builds a sanitized filename label from the snapshot's registered projects.
+     * Uses fixed labels for zero or multiple projects and the folder name for
+     * exactly one project.
+     *
+     * @param snapshot the telemetry snapshot containing project directories
+     * @return a filename-safe project label of at most 60 characters
+     */
     private String projectLabel(TelemetrySession snapshot) {
         var directories = snapshot.getProjectDirectories();
 
@@ -89,6 +116,11 @@ public class BackgroundExporter implements AutoCloseable {
         return safeName.substring(0, Math.min(safeName.length(), 60));
     }
 
+    /**
+     * Shuts down the export worker and waits up to 30 seconds for pending
+     * exports to finish. An interruption restores the thread's interrupted
+     * status and is reported to standard error.
+     */
     @Override
     public void close() {
         worker.shutdown();
