@@ -1,0 +1,156 @@
+{
+  "studentId" : "STUDENT-PLACEHOLDER",
+  "startTime" : "2026-11-18T10:20:51.5273712",
+  "endTime" : "2026-11-18T10:23:17.4769614",
+  "events" : [ {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:20:52.1291113",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "Calculator",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:20:52.1337807",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:20:52.1337807",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "BankAccount",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:20:52.1337807",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "Learner",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:20:52.1337807",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "ReportProbe",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:20:52.1358816",
+    "description" : "Compiled: false | Has error: false",
+    "className" : "ReportProbe",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "PACKAGE_OPENED",
+    "timestamp" : "2026-11-18T10:20:52.5059851",
+    "description" : "Project: C:\\Users\\N_Nar\\TelemetryTest | Package: (default package)",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_STARTED",
+    "timestamp" : "2026-11-18T10:20:53.7437661",
+    "description" : "Compilation started",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\ReportProbe.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_SUCCESS",
+    "timestamp" : "2026-11-18T10:20:54.9410455",
+    "description" : "Compilation succeeded",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\ReportProbe.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:21:24.5494892",
+    "description" : "Compiled: false | Has error: false",
+    "className" : "BankAccount",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "EDITOR_ACTIVITY",
+    "timestamp" : "2026-11-18T10:21:24.5525172",
+    "description" : "Editor document changed",
+    "className" : "BankAccount",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "EDITOR_ACTIVITY",
+    "timestamp" : "2026-11-18T10:21:26.98636",
+    "description" : "Editor document changed",
+    "className" : "BankAccount",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_STARTED",
+    "timestamp" : "2026-11-18T10:21:30.0846916",
+    "description" : "Compilation started",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\BankAccount.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:21:30.1967234",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "BankAccount",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_SUCCESS",
+    "timestamp" : "2026-11-18T10:21:30.2072497",
+    "description" : "Compilation succeeded",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\BankAccount.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  } ],
+  "projectDirectories" : [ "C:\\Users\\N_Nar\\TelemetryTest" ],
+  "failedCompilations" : 0,
+  "totalCompilations" : 2,
+  "successfulCompilations" : 2,
+  "sessionDurationSeconds" : 145.949,
+  "totalRuns" : 0,
+  "compileIntervalsSeconds" : [ 36.34 ],
+  "editorActivity" : {
+    "measurement" : "Document-change events; not individual keystrokes",
+    "estimationRule" : "Each edit marks the next 30 seconds active; overlaps count once; capped at session end",
+    "idleThresholdSeconds" : 30,
+    "editEvents" : 2,
+    "estimatedActiveSeconds" : 32.433,
+    "estimatedIdleSeconds" : 113.516
+  }
+}

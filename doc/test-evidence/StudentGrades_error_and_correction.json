@@ -1,0 +1,318 @@
+{
+  "studentId" : "STUDENT-PLACEHOLDER",
+  "startTime" : "2026-11-18T10:18:17.6050917",
+  "endTime" : "2026-11-18T10:20:14.9256466",
+  "events" : [ {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:18:18.2659993",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "Calculator",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:18:18.2704463",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:18:18.2704463",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "BankAccount",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:18:18.2704463",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "Learner",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:18:18.2704463",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "ReportProbe",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:18:18.272463",
+    "description" : "Compiled: false | Has error: false",
+    "className" : "ReportProbe",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "PACKAGE_OPENED",
+    "timestamp" : "2026-11-18T10:18:18.7704406",
+    "description" : "Project: C:\\Users\\N_Nar\\TelemetryTest | Package: (default package)",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_STARTED",
+    "timestamp" : "2026-11-18T10:18:20.0346485",
+    "description" : "Compilation started",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\ReportProbe.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_SUCCESS",
+    "timestamp" : "2026-11-18T10:18:21.0928435",
+    "description" : "Compilation succeeded",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\ReportProbe.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:18:50.6552654",
+    "description" : "Compiled: false | Has error: false",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "EDITOR_ACTIVITY",
+    "timestamp" : "2026-11-18T10:18:50.6605225",
+    "description" : "Editor document changed",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_STARTED",
+    "timestamp" : "2026-11-18T10:18:52.6331749",
+    "description" : "Compilation started",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_ERROR",
+    "timestamp" : "2026-11-18T10:18:52.6677918",
+    "description" : "';' expected",
+    "className" : null,
+    "lineNumber" : 7,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:18:52.6708224",
+    "description" : "Compiled: false | Has error: true",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_FAILURE",
+    "timestamp" : "2026-11-18T10:18:52.700255",
+    "description" : "Compilation failed",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:19:10.7704858",
+    "description" : "Compiled: false | Has error: false",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "EDITOR_ACTIVITY",
+    "timestamp" : "2026-11-18T10:19:10.7715249",
+    "description" : "Editor document changed",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_STARTED",
+    "timestamp" : "2026-11-18T10:19:14.0119144",
+    "description" : "Compilation started",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:19:14.1350391",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_SUCCESS",
+    "timestamp" : "2026-11-18T10:19:14.1461141",
+    "description" : "Compilation succeeded",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:19:17.8569351",
+    "description" : "Compiled: false | Has error: false",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "EDITOR_ACTIVITY",
+    "timestamp" : "2026-11-18T10:19:17.8589448",
+    "description" : "Editor document changed",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_STARTED",
+    "timestamp" : "2026-11-18T10:19:19.6122412",
+    "description" : "Compilation started",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_ERROR",
+    "timestamp" : "2026-11-18T10:19:19.7070369",
+    "description" : "cannot find symbol\n  symbol:   variable firstMark\n  location: class StudentGrades",
+    "className" : null,
+    "lineNumber" : 7,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:19:19.7070369",
+    "description" : "Compiled: false | Has error: true",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_FAILURE",
+    "timestamp" : "2026-11-18T10:19:19.7580696",
+    "description" : "Compilation failed",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:19:35.1704849",
+    "description" : "Compiled: false | Has error: false",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "EDITOR_ACTIVITY",
+    "timestamp" : "2026-11-18T10:19:35.1714854",
+    "description" : "Editor document changed",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_STARTED",
+    "timestamp" : "2026-11-18T10:19:37.3083797",
+    "description" : "Compilation started",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "CLASS_STATE_CHANGED",
+    "timestamp" : "2026-11-18T10:19:37.3979252",
+    "description" : "Compiled: true | Has error: false",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "COMPILE_SUCCESS",
+    "timestamp" : "2026-11-18T10:19:37.4069866",
+    "description" : "Compilation succeeded",
+    "className" : null,
+    "lineNumber" : null,
+    "sourceFiles" : [ "C:\\Users\\N_Nar\\TelemetryTest\\StudentGrades.java" ],
+    "methodName" : null,
+    "executionOutcome" : null
+  }, {
+    "type" : "PROGRAM_RUN",
+    "timestamp" : "2026-11-18T10:19:46.7583995",
+    "description" : "Invocation finished | Method: (not supplied) | Outcome: NORMAL_EXIT",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : null,
+    "executionOutcome" : "NORMAL_EXIT"
+  }, {
+    "type" : "PROGRAM_RUN",
+    "timestamp" : "2026-11-18T10:19:50.0226041",
+    "description" : "Invocation finished | Method: calculateAverage | Outcome: NORMAL_EXIT",
+    "className" : "StudentGrades",
+    "lineNumber" : null,
+    "sourceFiles" : [ ],
+    "methodName" : "calculateAverage",
+    "executionOutcome" : "NORMAL_EXIT"
+  } ],
+  "projectDirectories" : [ "C:\\Users\\N_Nar\\TelemetryTest" ],
+  "successfulCompilations" : 3,
+  "sessionDurationSeconds" : 117.32,
+  "totalCompilations" : 5,
+  "failedCompilations" : 2,
+  "totalRuns" : 2,
+  "compileIntervalsSeconds" : [ 32.598, 21.378, 5.6, 17.696 ],
+  "editorActivity" : {
+    "measurement" : "Document-change events; not individual keystrokes",
+    "estimationRule" : "Each edit marks the next 30 seconds active; overlaps count once; capped at session end",
+    "idleThresholdSeconds" : 30,
+    "editEvents" : 4,
+    "estimatedActiveSeconds" : 74.511,
+    "estimatedIdleSeconds" : 42.809
+  }
+}
