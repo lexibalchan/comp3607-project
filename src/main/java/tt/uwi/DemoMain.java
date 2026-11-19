@@ -1,125 +1,198 @@
 package tt.uwi;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import bluej.extensions2.BlueJ;
+import bluej.extensions2.Extension;
+import bluej.extensions2.ProjectNotOpenException;
+
 import java.time.LocalDateTime;
 
-import tt.uwi.analytics.AnalyticsSummary;
-import tt.uwi.analytics.SessionAnalytics;
 import tt.uwi.collection.TelemetryCollector;
 import tt.uwi.collection.TelemetrySubject;
-import tt.uwi.commands.CommandInvoker;
-import tt.uwi.commands.JsonExportCommand;
-import tt.uwi.commands.PdfExportCommand;
-import tt.uwi.export.ExportService;
-import tt.uwi.export.JsonExportStrategy;
-import tt.uwi.telemetry.model.EventType;
-import tt.uwi.telemetry.model.TelemetryEvent;
 import tt.uwi.telemetry.model.TelemetrySession;
 
+import tt.uwi.collection.BlueJCompileListener;
+import tt.uwi.collection.BlueJPackageListener;
+import tt.uwi.collection.ClassInventoryTracker;
+import tt.uwi.collection.BlueJClassScanner;
+import tt.uwi.analytics.AnalyticsSummary;
+import tt.uwi.analytics.SessionAnalytics;
+import tt.uwi.collection.BlueJClassListener;
+import tt.uwi.collection.BlueJExecutionListener;
+import tt.uwi.collection.EditorListenerRegistry;
+import tt.uwi.collection.MethodInventoryTracker;
+import tt.uwi.collection.BlueJMethodScanner;
+
+import java.nio.file.Path;
+import tt.uwi.export.BackgroundExporter;
+
 /**
- * Demonstrates telemetry collection, summary calculation, and JSON/PDF export
- * with sample events outside a running BlueJ extension.
+ * BlueJ extension entry point that collects telemetry, registers BlueJ event
+ * listeners, provides manual export, and performs a final export on shutdown.
  */
-public class DemoMain {
+public class TelemetryExtension extends Extension {
+
+    /** The live telemetry session maintained by the extension. */
+    private TelemetrySession session;
+
+    /** Subject used to publish telemetry events to registered observers. */
+    private TelemetrySubject subject;
+
+    /** Registry for editor listeners attached to scanned classes. */
+    private EditorListenerRegistry editorRegistry;
+
+    /** Background worker used for JSON and PDF exports. */
+    private BackgroundExporter exporter;
 
     /**
-     * Runs the telemetry demonstration from a live in-memory session.
-     * Publishes sample events through the observer subject, prints session
-     * statistics, creates the output directory, and exports JSON and PDF reports.
+     * Checks whether the extension API version is supported.
      *
-     * @param args command-line arguments; this demo does not require any
-     * @throws Exception if output directories or export files cannot be created
+     * @return {@code true} when the extension API major version is at least 3
      */
-    public static void main(String[] args) throws Exception {
+    @Override
+    public boolean isCompatible() {
+        return getExtensionsAPIVersionMajor() >= 3;
+    }
 
-        TelemetrySession session =
-                new TelemetrySession("STUDENT-001", LocalDateTime.now());
+    /** @return the extension display name */
+    @Override
+    public String getName() {
+        return "BlueJ Telemetry";
+    }
 
-        TelemetryCollector collector =
-                new TelemetryCollector(session);
+    /** @return the extension version string */
+    @Override
+    public String getVersion() {
+        return "0.1";
+    }
 
-        // Observer pattern: register the collector.
-        TelemetrySubject subject = new TelemetrySubject();
+    /**
+     * Starts the telemetry session and registers all BlueJ listeners and the
+     * manual-export menu action.
+     *
+     * @param bluej the active BlueJ environment
+     */
+    @Override
+    public void startup(BlueJ bluej) {
+        session = new TelemetrySession(
+                "STUDENT-PLACEHOLDER",
+                LocalDateTime.now()
+        );
+
+        exporter = new BackgroundExporter(
+                Path.of(System.getProperty("user.home"), 
+                        "bluej-telemetry-output"
+                )
+        );
+
+        subject = new TelemetrySubject();
+        TelemetryCollector collector = new TelemetryCollector(session);
         subject.addObserver(collector);
+        ClassInventoryTracker tracker = new ClassInventoryTracker(subject);
 
-        // Sample events for testing before BlueJ integration.
-        subject.publish(new TelemetryEvent(
-                EventType.PROJECT_OPENED,
-                LocalDateTime.now(),
-                "Demo project opened",
-                null
-        ));
+        MethodInventoryTracker methodTracker = new MethodInventoryTracker(subject);
+        BlueJMethodScanner methodScanner = new BlueJMethodScanner(bluej, methodTracker);
 
-        subject.publish(new TelemetryEvent(
-                EventType.CLASS_CREATED,
-                LocalDateTime.now(),
-                "Created a class",
-                "Student"
-        ));
+        editorRegistry = new EditorListenerRegistry(subject);
 
-        subject.publish(new TelemetryEvent(
-                EventType.COMPILE_SUCCESS,
-                LocalDateTime.now(),
-                "Compilation succeeded",
-                "Student"
-        ));
+        BlueJClassScanner scanner = new BlueJClassScanner(bluej, tracker, editorRegistry);
 
-        subject.publish(new TelemetryEvent(
-                EventType.PROGRAM_RUN,
-                LocalDateTime.now(),
-                "Program executed",
-                "Student"
-        ));
+        for (var project : bluej.getOpenProjects()) {
+            try {
+                session.registerProject(project.getDir().getAbsolutePath());
+            } catch (ProjectNotOpenException exception) {
+                System.err.println("Could not register an open project: "
+                                        + exception.getMessage()
+                );
+            }
+        }
 
-        subject.publish(new TelemetryEvent(
-                EventType.COMPILE_FAILURE,
-                LocalDateTime.now(),
-                "Example compile error",
-                "Student"
-        ));
+        scanner.scanOpenProjects();
+        methodScanner.scanOpenProjects();
 
-        session.setEndTime(LocalDateTime.now());
+        bluej.addCompileListener(
+            new BlueJCompileListener(
+                subject,
+                scanner::scanOpenProjects,
+                methodScanner::scanOpenProjects
+            )
+        );
 
-        // Calculate session statistics.
-        AnalyticsSummary summary =
-                new SessionAnalytics().analyse(session);
+        bluej.addPackageListener(
+            new BlueJPackageListener(
+                subject, 
+                scanner, 
+                session::registerProject,
+                methodScanner::scanPackage,
+                methodTracker::forgetPackage
+            )
+        );
 
-        System.out.println("Events recorded: " +
-                summary.getTotalEvents());
+        bluej.addClassListener(
+            new BlueJClassListener(tracker, subject)
+        );
 
-        System.out.println("Compilation attempts: " +
-                summary.getCompilationAttempts());
+        bluej.addInvocationFinishedListener(
+            new BlueJExecutionListener(subject)
+        );
 
-        System.out.println("Compilation failures: " +
-                summary.getCompilationFailures());
-        
-        System.out.println("Compilation success rate: " + 
-                summary.getCompilationSuccessRate() + "%");
+        System.out.println("Telemetry session started.");
 
-        // Create the output folder.
-        Path outputDirectory = Path.of("telemetry-output");
-        Files.createDirectories(outputDirectory);
+        bluej.setMenuGenerator(new TelemetryMenu(this::exportCurrentSession));
+    }
 
-        // Command and Strategy patterns: perform both exports.
-        ExportService exportService =
-                new ExportService(new JsonExportStrategy());
+    /**
+     * Creates a snapshot of the live session and queues its JSON and PDF export.
+     * The live session continues collecting events after the snapshot.
+     */
+    private void exportCurrentSession() {
+        TelemetrySession snapshot = session.snapshot(LocalDateTime.now());
 
-        CommandInvoker invoker = new CommandInvoker();
+        exporter.exportSnapshot(snapshot);
 
-        invoker.run(new JsonExportCommand(
-                exportService,
-                session,
-                outputDirectory.resolve("session.json")
-        ));
+        System.out.println("Manual telemetry export queued; "
+                            + "the session remains open."
+        );
+    }
 
-        invoker.run(new PdfExportCommand(
-                exportService,
-                session,
-                outputDirectory.resolve("session-report.pdf")
-        ));
+    /**
+     * Stops editor listening, creates and exports a final session snapshot,
+     * prints summary compilation counts, and closes the background exporter.
+     * Editor detachment and exporter shutdown are attempted even when parts of
+     * the session state are unavailable.
+     */
+    @Override
+    public void terminate() {
+        if (editorRegistry != null) {
+            editorRegistry.detachAll();
+        }
 
-        System.out.println("Files written to: " +
-                outputDirectory.toAbsolutePath());
+        if (exporter == null) {
+            return;
+        }
+
+        try {
+            if (session == null) {
+                return;
+            }
+
+            LocalDateTime endedAt = LocalDateTime.now();
+            session.setEndTime(endedAt);
+
+            TelemetrySession snapshot = session.snapshot(endedAt);
+
+            AnalyticsSummary summary =
+                    new SessionAnalytics().analyse(snapshot);
+
+            System.out.println("Telemetry session ended.");
+            System.out.println("Compilation attempts: "
+                    + summary.getCompilationAttempts());
+            System.out.println("Compilation failures: "
+                    + summary.getCompilationFailures());
+
+            exporter.exportSnapshot(snapshot);
+
+        } finally {
+            exporter.close();
+        }
     }
 }
